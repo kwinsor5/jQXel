@@ -15,6 +15,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 
 ## EXAMPLES
 ### Create your columns
+
 var column1Options = new Array();
   column1Options.push($('<option/>').val('1').text('Option 1'));
   column1Options.push($('<option/>').val('2').text('Option 2'));
@@ -32,6 +33,7 @@ var column1Options = new Array();
       { text: 'Column 7', editable: true, type: 'text' },
       { text: 'Column 8', editable: true, type: 'text' }
       ];
+
 
 ### Populate your table
 var data = [];
