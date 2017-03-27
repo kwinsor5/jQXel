@@ -16,81 +16,81 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 ## EXAMPLES
 ### Create your columns
 
-var column1Options = new Array();
-  column1Options.push($('<option/>').val('1').text('Option 1'));
-  column1Options.push($('<option/>').val('2').text('Option 2'));
-  column1Options.push($('<option/>').val('3').text('Option 3'));
-  column1Options.push($('<option/>').val('4').text('Option 4'));
-  column1Options.push($('<option/>').val('5').text('Option 5'));
-  var headers = [
-      { text: 'Column 0', editable: false, type: 'text' },
-      { text: 'Column 1', editable: true, type: 'select', options: column1Options },
-      { text: 'Column 2', editable: true, type: 'text' },
-      { text: 'Column 3', editable: true, type: 'text' },
-      { text: 'Column 4', editable: true, type: 'text' },
-      { text: 'Column 5', editable: true, type: 'text' },
-      { text: 'Column 6', editable: true, type: 'text' },
-      { text: 'Column 7', editable: true, type: 'text' },
-      { text: 'Column 8', editable: true, type: 'text' }
+    var column1Options = new Array();
+    column1Options.push($('<option/>').val('1').text('Option 1'));
+    column1Options.push($('<option/>').val('2').text('Option 2'));
+    column1Options.push($('<option/>').val('3').text('Option 3'));
+    column1Options.push($('<option/>').val('4').text('Option 4'));
+    column1Options.push($('<option/>').val('5').text('Option 5'));
+    var headers = [
+        { text: 'Column 0', editable: false, type: 'text' },
+        { text: 'Column 1', editable: true, type: 'select', options: column1Options },
+        { text: 'Column 2', editable: true, type: 'text' },
+        { text: 'Column 3', editable: true, type: 'text' },
+        { text: 'Column 4', editable: true, type: 'text' },
+        { text: 'Column 5', editable: true, type: 'text' },
+        { text: 'Column 6', editable: true, type: 'text' },
+        { text: 'Column 7', editable: true, type: 'text' },
+        { text: 'Column 8', editable: true, type: 'text' }
       ];
 
 
 ### Populate your table
-var data = [];
-  data.push(
-      [
-          { text: '0,1', value: '0,1', editable: 'false', entityId: 1, name: 'Text' },
-          { text: '1,1', value: '1,1', editable: 'true', entityId: 1, name: 'Text1' },
-          { text: '2,1', value: '2,1', editable: 'true', entityId: 1, name: 'Text2' },
-          { text: '3,1', value: '3,1', editable: 'true', entityId: 1, name: 'Text3' },
-          { text: '4,1', value: '4,1', editable: 'true', entityId: 1, name: 'Text4' },
-          { text: '5,1', value: '5,1', editable: 'true', entityId: 1, name: 'Text5' },
-          { text: '6,1', value: '6,1', editable: 'true', entityId: 1, name: 'Text6' },
-          { text: '7,1', value: '7,1', editable: 'true', entityId: 1, name: 'Text7' },
-          { text: '8,1', value: '8,1', editable: 'true', entityId: 1, name: 'Text8' },
-      ]
-      );
-  data.push(
-      [
-          { text: '0,2', value: '0,2', editable: 'false', entityId: 1, name: 'Text' },
-          { text: '1,2', value: '1,2', editable: 'true', entityId: 1, name: 'Text1' },
-          { text: '2,2', value: '2,2', editable: 'true', entityId: 1, name: 'Text2' },
-          { text: '3,2', value: '3,2', editable: 'true', entityId: 1, name: 'Text3' },
-          { text: '4,2', value: '4,2', editable: 'true', entityId: 1, name: 'Text4' },
-          { text: '5,2', value: '5,2', editable: 'true', entityId: 1, name: 'Text5' },
-          { text: '6,2', value: '6,2', editable: 'true', entityId: 1, name: 'Text6' },
-          { text: '7,2', value: '7,2', editable: 'true', entityId: 1, name: 'Text7' },
-          { text: '8,2', value: '8,2', editable: 'true', entityId: 1, name: 'Text8' },
-      ]
-      );
+    var data = [];
+    data.push(
+        [
+            { text: '0,1', value: '0,1', editable: 'false', entityId: 1, name: 'Text' },
+            { text: '1,1', value: '1,1', editable: 'true', entityId: 1, name: 'Text1' },
+            { text: '2,1', value: '2,1', editable: 'true', entityId: 1, name: 'Text2' },
+            { text: '3,1', value: '3,1', editable: 'true', entityId: 1, name: 'Text3' },
+            { text: '4,1', value: '4,1', editable: 'true', entityId: 1, name: 'Text4' },
+            { text: '5,1', value: '5,1', editable: 'true', entityId: 1, name: 'Text5' },
+            { text: '6,1', value: '6,1', editable: 'true', entityId: 1, name: 'Text6' },
+            { text: '7,1', value: '7,1', editable: 'true', entityId: 1, name: 'Text7' },
+            { text: '8,1', value: '8,1', editable: 'true', entityId: 1, name: 'Text8' },
+        ]
+        );
+    data.push(
+        [
+            { text: '0,2', value: '0,2', editable: 'false', entityId: 1, name: 'Text' },
+            { text: '1,2', value: '1,2', editable: 'true', entityId: 1, name: 'Text1' },
+            { text: '2,2', value: '2,2', editable: 'true', entityId: 1, name: 'Text2' },
+            { text: '3,2', value: '3,2', editable: 'true', entityId: 1, name: 'Text3' },
+            { text: '4,2', value: '4,2', editable: 'true', entityId: 1, name: 'Text4' },
+            { text: '5,2', value: '5,2', editable: 'true', entityId: 1, name: 'Text5' },
+            { text: '6,2', value: '6,2', editable: 'true', entityId: 1, name: 'Text6' },
+            { text: '7,2', value: '7,2', editable: 'true', entityId: 1, name: 'Text7' },
+            { text: '8,2', value: '8,2', editable: 'true', entityId: 1, name: 'Text8' },
+        ]
+        );
 
 ### Create your spreadsheet
-$('#container').jQXel({
-    headers: headers,
-    footer: footer,
-    data: data,
-    toolbarOptions: {
-        add: true,
-        copy: true,
-        insert: true,
-        includeRowNumbers: true,
-        position: 'top'
-    },
-    beforeCellChange: beforeCellChange
-  });
-  
-  function beforeCellChange(cell) {
-        $.ajax({
-            url: '/Home/Post',
-            type: 'POST',
-            data: { model: cell.getRowObject() },
-            async: true
-        }).done(function (results) {
-            //do something
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            cell.alert('Something bad happened');
-        });
-    }
+    $('#container').jQXel({
+        headers: headers,
+        footer: footer,
+        data: data,
+        toolbarOptions: {
+            add: true,
+            copy: true,
+            insert: true,
+            includeRowNumbers: true,
+            position: 'top'
+        },
+        beforeCellChange: beforeCellChange
+      });
+
+      function beforeCellChange(cell) {
+            $.ajax({
+                url: '/Home/Post',
+                type: 'POST',
+                data: { model: cell.getRowObject() },
+                async: true
+            }).done(function (results) {
+                //do something
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                cell.alert('Something bad happened');
+            });
+      }
 
 # DOCUMENTATION
 
