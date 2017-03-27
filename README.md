@@ -3,11 +3,15 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 
 ### Edit your data tables in a web-based, Excel-like user interface
 
-Options include toolbar buttons (copy selection, add row, delete row) and a couple of themes (more options are coming). 
-Callbacks are available for onjqxcelready, onbeforerowchange, onbeforecolumnchange, onbeforecellchange, and oncopy. 
-Callbacks will return cell, row, or column data in array format for easy manipulation.
-Pairs well with custom TypeScript classes to serialize your raw data into JSON objects.
-Control your active cell with arrow/tab buttons
+## FEATURES
+* Smooth spreadsheet look and feel
+* Arrow/tab key navigation
+* Editable content
+* Cell, row, and column change events
+* Automatic row serialization
+* Toolbar options to add, copy, and delete rows
+* Copy multiple rows to your clipboard
+* Select list, text, link support
 
 # DOCUMENTATION
 
