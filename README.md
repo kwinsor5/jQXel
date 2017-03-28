@@ -52,15 +52,15 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
         );
     data.push(
         [
-            { text: '0,2', value: '0,2', editable: 'false', entityId: 1, name: 'Text' },
-            { text: '1,2', value: '1,2', editable: 'true', entityId: 1, name: 'Text1' },
-            { text: '2,2', value: '2,2', editable: 'true', entityId: 1, name: 'Text2' },
-            { text: '3,2', value: '3,2', editable: 'true', entityId: 1, name: 'Text3' },
-            { text: '4,2', value: '4,2', editable: 'true', entityId: 1, name: 'Text4' },
-            { text: '5,2', value: '5,2', editable: 'true', entityId: 1, name: 'Text5' },
-            { text: '6,2', value: '6,2', editable: 'true', entityId: 1, name: 'Text6' },
-            { text: '7,2', value: '7,2', editable: 'true', entityId: 1, name: 'Text7' },
-            { text: '8,2', value: '8,2', editable: 'true', entityId: 1, name: 'Text8' },
+            { text: '0,2', value: '0,2', editable: 'false', entityId: 2, name: 'Text' },
+            { text: '1,2', value: '1,2', editable: 'true', entityId: 2, name: 'Text1' },
+            { text: '2,2', value: '2,2', editable: 'true', entityId: 2, name: 'Text2' },
+            { text: '3,2', value: '3,2', editable: 'true', entityId: 2, name: 'Text3' },
+            { text: '4,2', value: '4,2', editable: 'true', entityId: 2, name: 'Text4' },
+            { text: '5,2', value: '5,2', editable: 'true', entityId: 2, name: 'Text5' },
+            { text: '6,2', value: '6,2', editable: 'true', entityId: 2, name: 'Text6' },
+            { text: '7,2', value: '7,2', editable: 'true', entityId: 2, name: 'Text7' },
+            { text: '8,2', value: '8,2', editable: 'true', entityId: 2, name: 'Text8' },
         ]
         );
 
