@@ -35,10 +35,10 @@ class JSONData {
     }
 }
 class JSONRow {
-    constructor(data, entityId, entityIdName) {
+    constructor(data, entityId, idName) {
         this.data = data;
         this.entityId = entityId;
-        this.idName = entityIdName;
+        this.idName = idName;
     }
 }
 class JSONTable {
@@ -673,6 +673,7 @@ class SelectedCell {
     }
     getRowObject() {
         var context = this, rowObject = new Object();
+        console.log(context.parentJSON);
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row = context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {

@@ -62,10 +62,10 @@ class JSONData {
 }
 
 class JSONRow {
-    constructor(data: Array<JSONData>, entityId: number, entityIdName: string) {
+    constructor(data: Array<JSONData>, entityId: number, idName: string) {
         this.data = data;
         this.entityId = entityId;
-        this.idName = entityIdName;
+        this.idName = idName;
     }
     public data: Array<JSONData>;
     public entityId: number;
@@ -727,6 +727,7 @@ class SelectedCell {
     public getRowObject(): Object {
         var context: SelectedCell = this,
             rowObject: Object = new Object();
+        console.log(context.parentJSON);
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row: HTMLDivElement = <HTMLDivElement>context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {
