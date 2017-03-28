@@ -91,7 +91,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
                 type: 'POST',
                 data: { model: cell.getRowObject() },
                 async: true
-            }).done(function (results) {
+             }).done(function (results) {
                 //do something
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 cell.alert('Something bad happened');
@@ -117,6 +117,11 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * type (string) - The type of input for this column - text, select
 * name (string) - This is currently not being used
 * options (Array<HTMLOptionElement>) - Available options for cells of type 'select' in this column
+
+### JSONRow
+* entityId (number) - The row identifier
+* idName (string) - The property name of the identifier. Used for serialization
+* data (Array<JSONData>) - The row data
 
 ### JSONData
 * text (string) - The display text of the cell
