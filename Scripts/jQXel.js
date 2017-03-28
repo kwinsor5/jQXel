@@ -34,6 +34,12 @@ class JSONData {
         }
     }
 }
+class JSONRow {
+    constructor(data, entityId) {
+        this.data = data;
+        this.entityId = entityId;
+    }
+}
 class JSONTable {
     constructor(data, headers, footer, containerID, beforeCellChange, beforeColumnChange, beforeRowChange, onCopy, onjQXlReady, toolbarOptions, themeOptions) {
         var rowCallbacks = $.Callbacks(), colCallbacks = $.Callbacks(), copyCallbacks = $.Callbacks(), readyCallbacks = $.Callbacks(), cellCallbacks = $.Callbacks();
@@ -159,7 +165,7 @@ class JSONTable {
         for (var i = 0; i < count; i++) {
             dataRow.push(new JSONData(' ', ' ', 'True', this.headers[i].name, 0)); // when columns have editable options, check header data
         }
-        return dataRow;
+        return new JSONRow(dataRow, 0);
     }
     populateNewRow(row, rowData) {
         var colCount = this.headers.length;
@@ -241,7 +247,7 @@ class JSONTable {
         var rows = this.table.getElementsByClassName('jql-tbl-rw');
         console.log(rowIndex);
         var newRow = this.createRow(false, false, rowIndex + 1), dataRow = this.createNewDataRow(), context = this;
-        newRow = context.populateNewRow(newRow, dataRow);
+        newRow = context.populateNewRow(newRow, dataRow.data);
         context.data.splice(rowIndex, 0, dataRow).join();
         console.log(context.data);
         newRow.style.display = 'none';
@@ -377,8 +383,8 @@ class JSONTable {
                 if (context.toolbarOptions.includeRowNumbers) {
                     row.appendChild(context.createRowHeaderCell((y + 1).toString()));
                 }
-                for (var x = 0, xLength = context.data[y].length; x < xLength; x++) {
-                    row.appendChild(context.createCell(context.data[y][x], x, context.headers[x].type));
+                for (var x = 0, xLength = context.data[y].data.length; x < xLength; x++) {
+                    row.appendChild(context.createCell(context.data[y].data[x], x, context.headers[x].type));
                 }
                 table.appendChild(row);
                 miniTlbrTbl.appendChild(context.createMiniToolbar(y + 1));
@@ -402,8 +408,8 @@ class JSONTable {
         var rows = context.highlightedRows;
         if (rows && rows.length > 0) {
             for (var i = 0, length = rows.length; i < length; i++) {
-                for (var x = 0, rowLength = rows[i].length; x < rowLength; x++) {
-                    selectedText += (rows[i][x].text == null ? '' : rows[i][x].text + '\t');
+                for (var x = 0, rowLength = rows[i].data.length; x < rowLength; x++) {
+                    selectedText += (rows[i].data[x].text == null ? '' : rows[i].data[x].text + '\t');
                 }
                 selectedText += '\n';
             }
@@ -414,7 +420,7 @@ class JSONTable {
         var rowIndex = (this.data.length + 1);
         var colCount = this.headers.length, row = this.createRow(false, false, rowIndex);
         var rowData = this.createNewDataRow();
-        row = this.populateNewRow(row, rowData);
+        row = this.populateNewRow(row, rowData.data);
         this.data.push(rowData);
         this.table.appendChild(row);
         window.scrollTo(0, this.findPos(row));
@@ -596,8 +602,7 @@ class JSONTable {
         }
     }
     returnRow(rowIndex) {
-        var context = this;
-        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new Array();
+        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array(), 0);
     }
     returnColumn(cellIndex) {
         var context = this, colData = new Array();

@@ -60,8 +60,18 @@ class JSONData {
     public name: string;
     public href: string;
 }
+
+class JSONRow {
+    constructor(data: Array<JSONData>, entityId: number) {
+        this.data = data;
+        this.entityId = entityId;
+    }
+    public data: Array<JSONData>;
+    public entityId: number;
+}
+
 class JSONTable {
-    private data: Array<Array<JSONData>>;
+    private data: Array<JSONRow>;
     private table: HTMLDivElement;
     private toolbar: HTMLDivElement;
     private toolbarOptions: ToolbarOptions;
@@ -72,9 +82,9 @@ class JSONTable {
     public headers: Array<JSONHeader>;
     public footer: Array<JSONData>;
     public selectedCell: SelectedCell;
-    public highlightedRows: Array<Array<JSONData>>;
+    public highlightedRows: Array<JSONRow>;
 
-    constructor(data: Array<Array<JSONData>>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXlReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions) {
+    constructor(data: Array<JSONRow>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXlReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions) {
         var rowCallbacks = $.Callbacks(),
             colCallbacks = $.Callbacks(),
             copyCallbacks = $.Callbacks(),
@@ -187,13 +197,13 @@ class JSONTable {
             }
         };
     }
-    private createNewDataRow(): Array<JSONData> {
+    private createNewDataRow(): JSONRow {
         var count: number = this.headers ? this.headers.length : 0,
             dataRow: Array<JSONData> = new Array<JSONData>();
         for (var i = 0; i < count; i++) {
             dataRow.push(new JSONData(' ', ' ', 'True', this.headers[i].name, 0)); // when columns have editable options, check header data
         }
-        return dataRow;
+        return new JSONRow(dataRow, 0);
     }
     private populateNewRow(row: HTMLDivElement, rowData: Array<JSONData>): HTMLDivElement {
         var colCount: number = this.headers.length;
@@ -247,7 +257,7 @@ class JSONTable {
                 button.title = 'Copy to Clipboard';
                 button.classList.add('jql-mini-cpy-btn');
                 button.onmousedown = function (e: MouseEvent) {
-                    context.highlightedRows = new Array<Array<JSONData>>(context.data[rowIndex]);
+                    context.highlightedRows = new Array<JSONRow>(context.data[rowIndex]);
                     context.copyToClipboard();
                     e.preventDefault();
                     e.stopPropagation();
@@ -275,7 +285,7 @@ class JSONTable {
         var newRow = this.createRow(false, false, rowIndex + 1),
             dataRow = this.createNewDataRow(),
             context = this;
-        newRow = context.populateNewRow(newRow, dataRow);
+        newRow = context.populateNewRow(newRow, dataRow.data);
         context.data.splice(rowIndex, 0, dataRow).join();
         console.log(context.data);
         newRow.style.display = 'none';
@@ -410,8 +420,8 @@ class JSONTable {
                 if (context.toolbarOptions.includeRowNumbers) {
                     row.appendChild(context.createRowHeaderCell((y + 1).toString()));
                 }
-                for (var x = 0, xLength = context.data[y].length; x < xLength; x++) {
-                    row.appendChild(context.createCell(context.data[y][x], x, context.headers[x].type));
+                for (var x = 0, xLength = context.data[y].data.length; x < xLength; x++) {
+                    row.appendChild(context.createCell(context.data[y].data[x], x, context.headers[x].type));
                 }
                 table.appendChild(row);
                 miniTlbrTbl.appendChild(context.createMiniToolbar(y + 1));
@@ -434,11 +444,11 @@ class JSONTable {
     public getClipboardText(): string {
         var selectedText: string = '',
             context = this;
-        var rows: Array<Array<JSONData>> = context.highlightedRows;
+        var rows: Array<JSONRow> = context.highlightedRows;
         if (rows && rows.length > 0) {
             for (var i = 0, length = rows.length; i < length; i++) {
-                for (var x = 0, rowLength = rows[i].length; x < rowLength; x++) {
-                    selectedText += (rows[i][x].text == null ? '' : rows[i][x].text + '\t');
+                for (var x = 0, rowLength = rows[i].data.length; x < rowLength; x++) {
+                    selectedText += (rows[i].data[x].text == null ? '' : rows[i].data[x].text + '\t');
                 }
                 selectedText += '\n';
             }
@@ -449,8 +459,8 @@ class JSONTable {
         var rowIndex: number = (this.data.length + 1);
         var colCount: number = this.headers.length,
             row: HTMLDivElement = this.createRow(false, false, rowIndex);
-        var rowData: Array<JSONData> = this.createNewDataRow();
-        row = this.populateNewRow(row, rowData);
+        var rowData: JSONRow = this.createNewDataRow();
+        row = this.populateNewRow(row, rowData.data);
         this.data.push(rowData);
         this.table.appendChild(row);
         window.scrollTo(0, this.findPos(row));
@@ -555,7 +565,7 @@ class JSONTable {
         if (context.selectedCell) {
             var rowIndex: number = context.selectedCell.getRowIndex(),
                 textContent: string = context.selectedCell.cell.textContent;
-            var dataRow: Array<JSONData> = context.data[rowIndex];
+            var dataRow: JSONRow = context.data[rowIndex];
             var index: number = parseInt(context.selectedCell.cell.dataset['index']); // -1 to ignore row header
             if (dataRow[index] && dataRow[index].text) {
                 context.setItemValue(rowIndex, index, textContent);
@@ -637,9 +647,8 @@ class JSONTable {
             }
         }
     }
-    public returnRow(rowIndex: number): Array<JSONData> {
-        var context: JSONTable = this;
-        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new Array<JSONData>();
+    public returnRow(rowIndex: number): JSONRow {
+        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array<JSONData>(), 0);
     }
     public returnColumn(cellIndex: number): Array<JSONData> {
         var context: JSONTable = this,
@@ -654,10 +663,10 @@ class JSONTable {
     public toggleHighlight(index: number): void {
         var row: HTMLDivElement = <HTMLDivElement>this.table.getElementsByClassName('jql-tbl-rw')[index];
         row.classList.toggle('jql-hlght');
-        var rowData: Array<JSONData> = this.returnRow(index);
+        var rowData: JSONRow = this.returnRow(index);
         if (row.classList.contains('jql-hlght')) {
             if (!this.highlightedRows) {
-                this.highlightedRows = new Array<Array<JSONData>>();
+                this.highlightedRows = new Array<JSONRow>();
             }
             var add: boolean = true;
             for (var i = 0, length = this.highlightedRows.length; i < length; i++) {
@@ -772,7 +781,7 @@ class SelectedCell {
 
 (function ($, window, document) {
     var defaults = {
-        data: new Array<Array<JSONData>>(),
+        data: new Array<JSONRow>(),
         headers: new Array<JSONHeader>(),
         footer: new Array<JSONData>(),
         beforeRowChange: function () { },
