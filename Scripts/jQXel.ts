@@ -62,12 +62,14 @@ class JSONData {
 }
 
 class JSONRow {
-    constructor(data: Array<JSONData>, entityId: number) {
+    constructor(data: Array<JSONData>, entityId: number, entityIdName: string) {
         this.data = data;
         this.entityId = entityId;
+        this.idName = entityIdName;
     }
     public data: Array<JSONData>;
     public entityId: number;
+    public idName: string;
 }
 
 class JSONTable {
@@ -203,7 +205,7 @@ class JSONTable {
         for (var i = 0; i < count; i++) {
             dataRow.push(new JSONData(' ', ' ', 'True', this.headers[i].name, 0)); // when columns have editable options, check header data
         }
-        return new JSONRow(dataRow, 0);
+        return new JSONRow(dataRow, 0, '');
     }
     private populateNewRow(row: HTMLDivElement, rowData: Array<JSONData>): HTMLDivElement {
         var colCount: number = this.headers.length;
@@ -582,9 +584,10 @@ class JSONTable {
     public select(cell: HTMLDivElement): void {
         var context = this;
         context.bindNavigation(cell);
-        var header = context.headers[parseInt(cell.dataset['index'])];
+        var header: JSONHeader = context.headers[parseInt(cell.dataset['index'])];
+        var rowIndex: number = parseInt(cell.parentElement.dataset['rowIndex']);
         context.container.dispatchEvent(new Event('beforecellchange'));
-        context.selectedCell = new SelectedCell(cell, header.type, header.options);
+        context.selectedCell = new SelectedCell(cell, header.type, context.data[rowIndex], header.options);
     }
     public moveDown(): void {
         var context: JSONTable = this;
@@ -648,7 +651,7 @@ class JSONTable {
         }
     }
     public returnRow(rowIndex: number): JSONRow {
-        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array<JSONData>(), 0);
+        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array<JSONData>(), 0, '');
     }
     public returnColumn(cellIndex: number): Array<JSONData> {
         var context: JSONTable = this,
@@ -688,11 +691,13 @@ class JSONTable {
 }
 
 class SelectedCell {
-    constructor(cell: HTMLDivElement, type: string, options: Array<HTMLOptionElement>) {
+    constructor(cell: HTMLDivElement, type: string, parentRow: JSONRow, options: Array<HTMLOptionElement>) {
         this.cell = cell;
+        this.parentJSON = parentRow;
         this.select(type, options);
     }
     public cell: HTMLDivElement;
+    public parentJSON: JSONRow;
     public alert(message: string): void {
         this.cell.parentElement.classList.add('jql-alert');
         if (message && message.length) {
@@ -722,6 +727,7 @@ class SelectedCell {
     public getRowObject(): Object {
         var context: SelectedCell = this,
             rowObject: Object = new Object();
+        rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row: HTMLDivElement = <HTMLDivElement>context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {
             var child = (<HTMLDivElement>row.children[i]);

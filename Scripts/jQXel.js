@@ -35,9 +35,10 @@ class JSONData {
     }
 }
 class JSONRow {
-    constructor(data, entityId) {
+    constructor(data, entityId, entityIdName) {
         this.data = data;
         this.entityId = entityId;
+        this.idName = entityIdName;
     }
 }
 class JSONTable {
@@ -165,7 +166,7 @@ class JSONTable {
         for (var i = 0; i < count; i++) {
             dataRow.push(new JSONData(' ', ' ', 'True', this.headers[i].name, 0)); // when columns have editable options, check header data
         }
-        return new JSONRow(dataRow, 0);
+        return new JSONRow(dataRow, 0, '');
     }
     populateNewRow(row, rowData) {
         var colCount = this.headers.length;
@@ -537,8 +538,9 @@ class JSONTable {
         var context = this;
         context.bindNavigation(cell);
         var header = context.headers[parseInt(cell.dataset['index'])];
+        var rowIndex = parseInt(cell.parentElement.dataset['rowIndex']);
         context.container.dispatchEvent(new Event('beforecellchange'));
-        context.selectedCell = new SelectedCell(cell, header.type, header.options);
+        context.selectedCell = new SelectedCell(cell, header.type, context.data[rowIndex], header.options);
     }
     moveDown() {
         var context = this;
@@ -602,7 +604,7 @@ class JSONTable {
         }
     }
     returnRow(rowIndex) {
-        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array(), 0);
+        return this.data && this.data[rowIndex] ? this.data[rowIndex] : new JSONRow(new Array(), 0, '');
     }
     returnColumn(cellIndex) {
         var context = this, colData = new Array();
@@ -640,8 +642,9 @@ class JSONTable {
     }
 }
 class SelectedCell {
-    constructor(cell, type, options) {
+    constructor(cell, type, parentRow, options) {
         this.cell = cell;
+        this.parentJSON = parentRow;
         this.select(type, options);
     }
     alert(message) {
@@ -670,6 +673,7 @@ class SelectedCell {
     }
     getRowObject() {
         var context = this, rowObject = new Object();
+        rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row = context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {
             var child = row.children[i];
