@@ -86,7 +86,7 @@ class JSONTable {
     public selectedCell: SelectedCell;
     public highlightedRows: Array<JSONRow>;
 
-    constructor(data: Array<JSONRow>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXlReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions) {
+    constructor(data: Array<JSONRow>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXelReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions) {
         var rowCallbacks = $.Callbacks(),
             colCallbacks = $.Callbacks(),
             copyCallbacks = $.Callbacks(),
@@ -119,8 +119,7 @@ class JSONTable {
         if (beforeRowChange.length) {
             rowCallbacks.add(beforeRowChange);
             context.container.addEventListener('beforerowchange', function (e: Event) {
-                var index = context.selectedCell.getRowIndex();
-                var rowData = context.returnRow(index);
+                var rowData: Object = context.selectedCell.getRowObject();
                 rowCallbacks.fire(rowData, context.selectedCell);
             });
         }
@@ -143,8 +142,8 @@ class JSONTable {
 
             });
         }
-        if (onjQXlReady.length) {
-            readyCallbacks.add(onjQXlReady);
+        if (onjQXelReady.length) {
+            readyCallbacks.add(onjQXelReady);
             context.container.addEventListener('jqxlready', function (e: Event) {
                 readyCallbacks.fire(e, context);
             });
@@ -154,7 +153,7 @@ class JSONTable {
     }
 
     private setItemValue(rowIndex: number, cellIndex: number, text: string): void {
-        this.data[rowIndex][cellIndex].text = text;
+        this.data[rowIndex].data[cellIndex].text = text;
     }
     private bindFocus(cell: HTMLDivElement) {
         var context: JSONTable = this;
@@ -458,14 +457,23 @@ class JSONTable {
         return selectedText;
     }
     public appendRow(): void {
-        var rowIndex: number = (this.data.length + 1);
-        var colCount: number = this.headers.length,
-            row: HTMLDivElement = this.createRow(false, false, rowIndex);
-        var rowData: JSONRow = this.createNewDataRow();
-        row = this.populateNewRow(row, rowData.data);
-        this.data.push(rowData);
-        this.table.appendChild(row);
-        window.scrollTo(0, this.findPos(row));
+        var context: JSONTable = this;
+        var rowIndex: number = (context.data.length + 1);
+        var footer = context.table.lastChild;
+        if (context.footer && context.footer.length) {
+            rowIndex--;
+            context.table.removeChild(footer);
+        }
+        var colCount: number = context.headers.length,
+            row: HTMLDivElement = context.createRow(false, false, rowIndex);
+        var rowData: JSONRow = context.createNewDataRow();
+        row = context.populateNewRow(row, rowData.data);
+        context.data.push(rowData);
+        if (context.footer && context.footer.length) {
+            context.table.appendChild(row);
+            context.table.appendChild(footer);
+        }
+        window.scrollTo(0, context.findPos(row));
     }
     public copyToClipboard(): void {
         document.execCommand('copy');
@@ -569,16 +577,14 @@ class JSONTable {
                 textContent: string = context.selectedCell.cell.textContent;
             var dataRow: JSONRow = context.data[rowIndex];
             var index: number = parseInt(context.selectedCell.cell.dataset['index']); // -1 to ignore row header
-            if (dataRow[index] && dataRow[index].text) {
+            if (dataRow.data[index] && dataRow.data[index].text) {
                 context.setItemValue(rowIndex, index, textContent);
             }
-            console.log(context.headers[index].editable);
-            // set the value to textContent unless it's not editable. Some non-editable cells (like Equipment Type) have a primary key value to post back on the beforecellchange event
             if (context.headers[index].type === 'text' && context.selectedCell.cell.hasAttribute('contenteditable')) {
                 context.selectedCell.cell.dataset['value'] = textContent;
             }
             context.selectedCell.cell.classList.remove('jql-slctd');
-            context.selectedCell.cell.removeEventListener('keydown', function () { console.log('unbind keydown'); });
+            context.selectedCell.cell.removeEventListener('keydown', function () { });
         }
     }
     public select(cell: HTMLDivElement): void {
@@ -658,15 +664,15 @@ class JSONTable {
             colData: Array<JSONData> = new Array<JSONData>();
         if (context.data && context.data.length > 0) {
             for (var x = 0, length = context.data.length; x < length; x++) {
-                colData.push(context.data[x][cellIndex]);
+                colData.push(context.data[x].data[cellIndex]);
             }
         }
         return colData;
     }
-    public toggleHighlight(index: number): void {
-        var row: HTMLDivElement = <HTMLDivElement>this.table.getElementsByClassName('jql-tbl-rw')[index];
+    public toggleHighlight(rowIndex: number): void {
+        var row: HTMLDivElement = <HTMLDivElement>this.table.getElementsByClassName('jql-tbl-rw')[rowIndex];
         row.classList.toggle('jql-hlght');
-        var rowData: JSONRow = this.returnRow(index);
+        var rowData: JSONRow = this.returnRow(rowIndex);
         if (row.classList.contains('jql-hlght')) {
             if (!this.highlightedRows) {
                 this.highlightedRows = new Array<JSONRow>();
@@ -795,7 +801,7 @@ class SelectedCell {
         beforeColumnChange: function () { },
         beforeCellChange: function () { },
         onCopy: function () { },
-        onjQXlready: function (table) { },
+        onjQXelready: function (table) { },
         toolbarOptions: new ToolbarOptions(true, true, true, true, 'left'),
         themeOptions: new ThemeOptions('blu', 'normal')
     };
@@ -811,7 +817,7 @@ class SelectedCell {
                 defaults.beforeColumnChange,
                 defaults.beforeRowChange,
                 defaults.onCopy,
-                defaults.onjQXlready,
+                defaults.onjQXelready,
                 defaults.toolbarOptions,
                 defaults.themeOptions
             );

@@ -42,7 +42,7 @@ class JSONRow {
     }
 }
 class JSONTable {
-    constructor(data, headers, footer, containerID, beforeCellChange, beforeColumnChange, beforeRowChange, onCopy, onjQXlReady, toolbarOptions, themeOptions) {
+    constructor(data, headers, footer, containerID, beforeCellChange, beforeColumnChange, beforeRowChange, onCopy, onjQXelReady, toolbarOptions, themeOptions) {
         var rowCallbacks = $.Callbacks(), colCallbacks = $.Callbacks(), copyCallbacks = $.Callbacks(), readyCallbacks = $.Callbacks(), cellCallbacks = $.Callbacks();
         this.data = data;
         this.headers = headers;
@@ -71,8 +71,7 @@ class JSONTable {
         if (beforeRowChange.length) {
             rowCallbacks.add(beforeRowChange);
             context.container.addEventListener('beforerowchange', function (e) {
-                var index = context.selectedCell.getRowIndex();
-                var rowData = context.returnRow(index);
+                var rowData = context.selectedCell.getRowObject();
                 rowCallbacks.fire(rowData, context.selectedCell);
             });
         }
@@ -94,8 +93,8 @@ class JSONTable {
                 }
             });
         }
-        if (onjQXlReady.length) {
-            readyCallbacks.add(onjQXlReady);
+        if (onjQXelReady.length) {
+            readyCallbacks.add(onjQXelReady);
             context.container.addEventListener('jqxlready', function (e) {
                 readyCallbacks.fire(e, context);
             });
@@ -104,7 +103,7 @@ class JSONTable {
         container.appendChild(this.container);
     }
     setItemValue(rowIndex, cellIndex, text) {
-        this.data[rowIndex][cellIndex].text = text;
+        this.data[rowIndex].data[cellIndex].text = text;
     }
     bindFocus(cell) {
         var context = this;
@@ -418,13 +417,22 @@ class JSONTable {
         return selectedText;
     }
     appendRow() {
-        var rowIndex = (this.data.length + 1);
-        var colCount = this.headers.length, row = this.createRow(false, false, rowIndex);
-        var rowData = this.createNewDataRow();
-        row = this.populateNewRow(row, rowData.data);
-        this.data.push(rowData);
-        this.table.appendChild(row);
-        window.scrollTo(0, this.findPos(row));
+        var context = this;
+        var rowIndex = (context.data.length + 1);
+        var footer = context.table.lastChild;
+        if (context.footer && context.footer.length) {
+            rowIndex--;
+            context.table.removeChild(footer);
+        }
+        var colCount = context.headers.length, row = context.createRow(false, false, rowIndex);
+        var rowData = context.createNewDataRow();
+        row = context.populateNewRow(row, rowData.data);
+        context.data.push(rowData);
+        if (context.footer && context.footer.length) {
+            context.table.appendChild(row);
+            context.table.appendChild(footer);
+        }
+        window.scrollTo(0, context.findPos(row));
     }
     copyToClipboard() {
         document.execCommand('copy');
@@ -522,16 +530,14 @@ class JSONTable {
             var rowIndex = context.selectedCell.getRowIndex(), textContent = context.selectedCell.cell.textContent;
             var dataRow = context.data[rowIndex];
             var index = parseInt(context.selectedCell.cell.dataset['index']); // -1 to ignore row header
-            if (dataRow[index] && dataRow[index].text) {
+            if (dataRow.data[index] && dataRow.data[index].text) {
                 context.setItemValue(rowIndex, index, textContent);
             }
-            console.log(context.headers[index].editable);
-            // set the value to textContent unless it's not editable. Some non-editable cells (like Equipment Type) have a primary key value to post back on the beforecellchange event
             if (context.headers[index].type === 'text' && context.selectedCell.cell.hasAttribute('contenteditable')) {
                 context.selectedCell.cell.dataset['value'] = textContent;
             }
             context.selectedCell.cell.classList.remove('jql-slctd');
-            context.selectedCell.cell.removeEventListener('keydown', function () { console.log('unbind keydown'); });
+            context.selectedCell.cell.removeEventListener('keydown', function () { });
         }
     }
     select(cell) {
@@ -610,15 +616,15 @@ class JSONTable {
         var context = this, colData = new Array();
         if (context.data && context.data.length > 0) {
             for (var x = 0, length = context.data.length; x < length; x++) {
-                colData.push(context.data[x][cellIndex]);
+                colData.push(context.data[x].data[cellIndex]);
             }
         }
         return colData;
     }
-    toggleHighlight(index) {
-        var row = this.table.getElementsByClassName('jql-tbl-rw')[index];
+    toggleHighlight(rowIndex) {
+        var row = this.table.getElementsByClassName('jql-tbl-rw')[rowIndex];
         row.classList.toggle('jql-hlght');
-        var rowData = this.returnRow(index);
+        var rowData = this.returnRow(rowIndex);
         if (row.classList.contains('jql-hlght')) {
             if (!this.highlightedRows) {
                 this.highlightedRows = new Array();
@@ -738,14 +744,14 @@ class SelectedCell {
         beforeColumnChange: function () { },
         beforeCellChange: function () { },
         onCopy: function () { },
-        onjQXlready: function (table) { },
+        onjQXelready: function (table) { },
         toolbarOptions: new ToolbarOptions(true, true, true, true, 'left'),
         themeOptions: new ThemeOptions('blu', 'normal')
     };
     $.fn.jQXel = function (options) {
         defaults = $.extend(defaults, options);
         return this.each(function (index, item) {
-            return new JSONTable(defaults.data, defaults.headers, defaults.footer, item.id, defaults.beforeCellChange, defaults.beforeColumnChange, defaults.beforeRowChange, defaults.onCopy, defaults.onjQXlready, defaults.toolbarOptions, defaults.themeOptions);
+            return new JSONTable(defaults.data, defaults.headers, defaults.footer, item.id, defaults.beforeCellChange, defaults.beforeColumnChange, defaults.beforeRowChange, defaults.onCopy, defaults.onjQXelready, defaults.toolbarOptions, defaults.themeOptions);
         });
     };
 })(jQuery, window, document);

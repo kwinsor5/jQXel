@@ -73,10 +73,12 @@
 
 .jql-mini-tlbr .jql-mini-insrt-btn {
     background: url(Images/insert_row.png) no-repeat 100%;
+    background-size: 100%;
 }
 
 .jql-mini-tlbr .jql-mini-cpy-btn {
     background: url(Images/copy_row.png) no-repeat 100%;
+    background-size: 100%;
 }
 
 
