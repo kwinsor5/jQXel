@@ -125,7 +125,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * moveRight() {void} - Moves the currently active cell right 1 column
 * returnRow(rowIndex: number) {JSONRow} - Returns the JSONRow object for the specified index
 * returnColumn(cellIndex: number) {Array<JSONData>} - Returns an array of JSONData objects for the specified index
-*toggleHighlight(index: number) {void} - Toggles the specified row's highlighted status
+* toggleHighlight(index: number) {void} - Toggles the specified row's highlighted status
 
 #### Dynamically create your own rows
 * appendRow() {void} - Adds a new row to the bottom of the table
