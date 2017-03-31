@@ -36,33 +36,39 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 
 
 ### Populate your table
-    var data = [];
-    data.push(
-        [
-            { text: '0,1', value: '0,1', editable: 'false', entityId: 1, name: 'Text' },
-            { text: '1,1', value: '1,1', editable: 'true', entityId: 1, name: 'Text1' },
-            { text: '2,1', value: '2,1', editable: 'true', entityId: 1, name: 'Text2' },
-            { text: '3,1', value: '3,1', editable: 'true', entityId: 1, name: 'Text3' },
-            { text: '4,1', value: '4,1', editable: 'true', entityId: 1, name: 'Text4' },
-            { text: '5,1', value: '5,1', editable: 'true', entityId: 1, name: 'Text5' },
-            { text: '6,1', value: '6,1', editable: 'true', entityId: 1, name: 'Text6' },
-            { text: '7,1', value: '7,1', editable: 'true', entityId: 1, name: 'Text7' },
-            { text: '8,1', value: '8,1', editable: 'true', entityId: 1, name: 'Text8' },
-        ]
+       var data = [];
+        data.push({
+            data: [
+                { text: '0,1', value: '0,1', editable: 'false', entityId: 1, name: 'Text' },
+                { text: '1,1', value: '1,1', editable: 'true', entityId: 1, name: 'Text1' },
+                { text: '2,1', value: '2,1', editable: 'true', entityId: 1, name: 'Text2' },
+                { text: '3,1', value: '3,1', editable: 'true', entityId: 1, name: 'Text3' },
+                { text: '4,1', value: '4,1', editable: 'true', entityId: 1, name: 'Text4' },
+                { text: '5,1', value: '5,1', editable: 'true', entityId: 1, name: 'Text5' },
+                { text: '6,1', value: '6,1', editable: 'true', entityId: 1, name: 'Text6' },
+                { text: '7,1', value: '7,1', editable: 'true', entityId: 1, name: 'Text7' },
+                { text: '8,1', value: '8,1', editable: 'true', entityId: 1, name: 'Text8' },
+            ],
+            entityId: 1,
+            idName: 'Id'
+            }
         );
-    data.push(
-        [
-            { text: '0,2', value: '0,2', editable: 'false', entityId: 2, name: 'Text' },
-            { text: '1,2', value: '1,2', editable: 'true', entityId: 2, name: 'Text1' },
-            { text: '2,2', value: '2,2', editable: 'true', entityId: 2, name: 'Text2' },
-            { text: '3,2', value: '3,2', editable: 'true', entityId: 2, name: 'Text3' },
-            { text: '4,2', value: '4,2', editable: 'true', entityId: 2, name: 'Text4' },
-            { text: '5,2', value: '5,2', editable: 'true', entityId: 2, name: 'Text5' },
-            { text: '6,2', value: '6,2', editable: 'true', entityId: 2, name: 'Text6' },
-            { text: '7,2', value: '7,2', editable: 'true', entityId: 2, name: 'Text7' },
-            { text: '8,2', value: '8,2', editable: 'true', entityId: 2, name: 'Text8' },
-        ]
-        );
+        data.push({
+            data: [
+                { text: '0,2', value: '0,2', editable: 'false', entityId: 2, name: 'Text' },
+                { text: '1,2', value: '1,2', editable: 'true', entityId: 2, name: 'Text1' },
+                { text: '2,2', value: '2,2', editable: 'true', entityId: 2, name: 'Text2' },
+                { text: '3,2', value: '3,2', editable: 'true', entityId: 2, name: 'Text3' },
+                { text: '4,2', value: '4,2', editable: 'true', entityId: 2, name: 'Text4' },
+                { text: '5,2', value: '5,2', editable: 'true', entityId: 2, name: 'Text5' },
+                { text: '6,2', value: '6,2', editable: 'true', entityId: 2, name: 'Text6' },
+                { text: '7,2', value: '7,2', editable: 'true', entityId: 2, name: 'Text7' },
+                { text: '8,2', value: '8,2', editable: 'true', entityId: 2, name: 'Text8' },
+            ],
+            entityId: 2,
+            idName: 'Id'
+            }
+    );
 
 ### Create your spreadsheet
     $('#container').jQXel({
@@ -85,7 +91,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
                 type: 'POST',
                 data: { model: cell.getRowObject() },
                 async: true
-            }).done(function (results) {
+             }).done(function (results) {
                 //do something
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 cell.alert('Something bad happened');
@@ -105,6 +111,35 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * position (string) - Indicates the toolbar position - top, bottom, left, right
 * includeRowNumbers (Boolean) - If true, displays an auto-numbered header cell on each row
 
+### JSONTable
+* headers (Array<JSONHeader>) - The header cells passed on initialization
+* footer (Array<JSONData>) - The footer cells passed on initialization
+* selectedCell (SelectedCell) - The cell object designated when a cell is active
+* highlightedRows (Array<JSONRow>) - An array of JSONRow objects for the highlighted rows
+* getClipboardText() {string} - Returns an array of JSONRow objects for the currently highlighted rows
+* clearSelected() {void} - De-activates any currently active cells
+* select(cell: HTMLDivElement) {void} - Creates the SelectedCell object and designates the cell passed in as the only selected cell
+* moveDown() {void} - Moves the currently active cell down 1 row
+* moveUp() {void} - Moves the currently active cell up 1 row
+* moveLeft() {void} - Moves the currently active cell left 1 column
+* moveRight() {void} - Moves the currently active cell right 1 column
+* returnRow(rowIndex: number) {JSONRow} - Returns the JSONRow object for the specified index
+* returnColumn(cellIndex: number) {Array<JSONData>} - Returns an array of JSONData objects for the specified index
+* toggleHighlight(index: number) {void} - Toggles the specified row's highlighted status
+
+#### Dynamically create your own rows
+* appendRow() {void} - Adds a new row to the bottom of the table
+* createRow(isHeader: boolean, isFooter: boolean, index: number) {HTMLDivElement} - Creates a returns an HTML div element with jQXel classes applied (for use with functions below)
+* createRowHeaderCell(rowIndex: number) {HTMLDivElement} - Creates and returns the header cell with mouse events (mousedown = highlight) already bound
+* createCell(cellData: JSONData, index: number, type: string) {HTMLDivElement} - Creates and returns a cell based on the JSONData object passed to the function
+
+#### Events
+* onCopy(e: ClipboardEvent, highlightedRows: Array<JSONRow>)
+* beforeRowChange(rowData: Object, selectedCell: SelectedCell)
+* beforeColumnChange(colData: Array<JSONData>, selectedCell: SelectedCell)
+* beforeCellChange(selectedCell: SelectedCell)
+* onjQXelReady(e: Event, context: JSONTable)
+
 ### JSONHeader
 * text (string) - The display text
 * editable (string) - Indicates whether the entire column is editable (may be overridden on the cell level)
@@ -112,11 +147,16 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * name (string) - This is currently not being used
 * options (Array<HTMLOptionElement>) - Available options for cells of type 'select' in this column
 
+### JSONRow
+* entityId (number) - The row identifier
+* idName (string) - The property name of the identifier. Used for serialization
+* data (Array<JSONData>) - The row data
+
 ### JSONData
 * text (string) - The display text of the cell
 * value (string) - The value of the cell
 * editable (string) - Acts as an override for the column's 'editable' field
-* entityId (number) - This needs to be changed to be assigned to the row object
+* entityId (number) - The identifier/primary key for the object
 * name (string) - The name of the editable field. Used for serialization of JSON objects in change events
 * href (string?) - If present, the text value will be converted to a link with the given href
 
