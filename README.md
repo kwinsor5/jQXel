@@ -111,6 +111,28 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * position (string) - Indicates the toolbar position - top, bottom, left, right
 * includeRowNumbers (Boolean) - If true, displays an auto-numbered header cell on each row
 
+### JSONTable
+* headers (Array<JSONHeader>) - The header cells passed on initialization
+* footer (Array<JSONData>) - The footer cells passed on initialization
+* selectedCell (SelectedCell) - The cell object designated when a cell is active
+* highlightedRows (Array<JSONRow>) - An array of JSONRow objects for the highlighted rows
+* getClipboardText() {string} - Returns an array of JSONRow objects for the currently highlighted rows
+* clearSelected() {void} - De-activates any currently active cells
+* select(cell: HTMLDivElement) {void} - Creates the SelectedCell object and designates the cell passed in as the only selected cell
+* moveDown() {void} - Moves the currently active cell down 1 row
+* moveUp() {void} - Moves the currently active cell up 1 row
+* moveLeft() {void} - Moves the currently active cell left 1 column
+* moveRight() {void} - Moves the currently active cell right 1 column
+* returnRow(rowIndex: number) {JSONRow} - Returns the JSONRow object for the specified index
+* returnColumn(cellIndex: number) {Array<JSONData>} - Returns an array of JSONData objects for the specified index
+*toggleHighlight(index: number) {void} - Toggles the specified row's highlighted status
+
+#### Dynamically create your own rows
+* appendRow() {void} - Adds a new row to the bottom of the table
+* createRow(isHeader: boolean, isFooter: boolean, index: number) {HTMLDivElement} - Creates a returns an HTML div element with jQXel classes applied (for use with functions below)
+* createRowHeaderCell(rowIndex: number) {HTMLDivElement} - Creates and returns the header cell with mouse events (mousedown = highlight) already bound
+* createCell(cellData: JSONData, index: number, type: string) {HTMLDivElement} - Creates and returns a cell based on the JSONData object passed to the function
+
 ### JSONHeader
 * text (string) - The display text
 * editable (string) - Indicates whether the entire column is editable (may be overridden on the cell level)
