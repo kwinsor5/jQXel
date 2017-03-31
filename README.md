@@ -133,6 +133,13 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * createRowHeaderCell(rowIndex: number) {HTMLDivElement} - Creates and returns the header cell with mouse events (mousedown = highlight) already bound
 * createCell(cellData: JSONData, index: number, type: string) {HTMLDivElement} - Creates and returns a cell based on the JSONData object passed to the function
 
+#### Events
+* onCopy(e: ClipboardEvent, highlightedRows: Array<JSONRow>)
+* beforeRowChange(rowData: Object, selectedCell: SelectedCell)
+* beforeColumnChange(colData: Array<JSONData>, selectedCell: SelectedCell)
+* beforeCellChange(selectedCell: SelectedCell)
+* onjQXelReady(e: Event, context: JSONTable)
+
 ### JSONHeader
 * text (string) - The display text
 * editable (string) - Indicates whether the entire column is editable (may be overridden on the cell level)
