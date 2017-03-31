@@ -156,7 +156,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * text (string) - The display text of the cell
 * value (string) - The value of the cell
 * editable (string) - Acts as an override for the column's 'editable' field
-* entityId (number) - This needs to be changed to be assigned to the row object
+* entityId (number) - The identifier/primary key for the object
 * name (string) - The name of the editable field. Used for serialization of JSON objects in change events
 * href (string?) - If present, the text value will be converted to a link with the given href
 
