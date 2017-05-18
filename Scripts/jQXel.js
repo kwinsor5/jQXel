@@ -24,15 +24,15 @@ class JSONHeader {
     }
 }
 class JSONData {
-    constructor(text, value, editable, name, entityId, href, className) {
+    constructor(text, value, editable, name, entityId, html, className) {
         this.className = className;
         this.text = text;
         this.value = value;
         this.editable = editable;
         this.name = name;
         this.entityId = entityId;
-        if (href) {
-            this.href = href;
+        if (html) {
+            this.html = html[0];
         }
     }
 }
@@ -529,11 +529,8 @@ class JSONTable {
         cell.dataset['name'] = cellData.name;
         cell.dataset['value'] = cellData.value;
         cell.dataset['entityid'] = cellData.entityId.toString();
-        if (cellData.href) {
-            var a = document.createElement('a');
-            a.href = cellData.href;
-            a.textContent = $('<div/>').html(cellData.text).text();
-            cell.appendChild(a);
+        if (cellData.html) {
+            cell.appendChild(cellData.html);
         }
         else {
             cell.textContent = $('<div/>').html(cellData.text).text() || ' ';

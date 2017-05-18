@@ -44,15 +44,15 @@ class JSONHeader {
 }
 
 class JSONData {
-    constructor(text: string, value: string, editable: string, name: string, entityId: number, href?: string, className?: string) {
+    constructor(text: string, value: string, editable: string, name: string, entityId: number, html?: HTMLElement, className?: string) {
         this.className = className;
         this.text = text;
         this.value = value;
         this.editable = editable;
         this.name = name;
         this.entityId = entityId;
-        if (href) {
-            this.href = href;
+        if (html) {
+            this.html = <HTMLElement>html[0];
         }
     }
     public className: string;
@@ -61,7 +61,7 @@ class JSONData {
     public editable: string;
     public entityId: number;
     public name: string;
-    public href: string;
+    public html: HTMLElement;
 }
 
 class JSONRow {
@@ -579,11 +579,8 @@ class JSONTable {
         cell.dataset['name'] = cellData.name;
         cell.dataset['value'] = cellData.value;
         cell.dataset['entityid'] = cellData.entityId.toString();
-        if (cellData.href) {
-            var a: HTMLAnchorElement = document.createElement('a');
-            a.href = cellData.href;
-            a.textContent = $('<div/>').html(cellData.text).text();
-            cell.appendChild(a);
+        if (cellData.html) {
+            cell.appendChild(cellData.html);
         } else {
             cell.textContent = $('<div/>').html(cellData.text).text() || ' ';
         }
