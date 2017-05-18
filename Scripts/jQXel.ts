@@ -26,7 +26,8 @@ class ToolbarOptions {
 }
 
 class JSONHeader {
-    constructor(text: string, editable: string, type: string, name: string, options: Array<HTMLOptionElement>) {
+    constructor(text: string, editable: string, type: string, name: string, options: Array<HTMLOptionElement>, className?: string) {
+        this.className = className;
         this.text = text;
         this.editable = editable;
         this.type = type;
@@ -34,6 +35,7 @@ class JSONHeader {
         this.name = name;
     }
 
+    public className: string;
     public text: string;
     public editable: string;
     public type: string;
@@ -42,7 +44,8 @@ class JSONHeader {
 }
 
 class JSONData {
-    constructor(text: string, value: string, editable: string, name: string, entityId: number, href?: string) {
+    constructor(text: string, value: string, editable: string, name: string, entityId: number, href?: string, className?: string) {
+        this.className = className;
         this.text = text;
         this.value = value;
         this.editable = editable;
@@ -52,7 +55,7 @@ class JSONData {
             this.href = href;
         }
     }
-
+    public className: string;
     public text: string;
     public value: string;
     public editable: string;
@@ -62,11 +65,13 @@ class JSONData {
 }
 
 class JSONRow {
-    constructor(data: Array<JSONData>, entityId: number, idName: string) {
+    constructor(data: Array<JSONData>, entityId: number, idName: string, className?: string) {
+        this.className = className;
         this.data = data;
         this.entityId = entityId;
         this.idName = idName;
     }
+    public className: string;
     public data: Array<JSONData>;
     public entityId: number;
     public idName: string;
@@ -86,7 +91,7 @@ class JSONTable {
     public selectedCell: SelectedCell;
     public highlightedRows: Array<JSONRow>;
 
-    constructor(data: Array<JSONRow>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXelReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions) {
+    constructor(data: Array<JSONRow>, headers: Array<JSONHeader>, footer: Array<JSONData>, containerID: string, beforeCellChange: Function, beforeColumnChange: Function, beforeRowChange: Function, onCopy: Function, onjQXelReady: Function, toolbarOptions: ToolbarOptions, themeOptions: ThemeOptions, className?: string) {
         var rowCallbacks = $.Callbacks(),
             colCallbacks = $.Callbacks(),
             copyCallbacks = $.Callbacks(),
@@ -97,7 +102,7 @@ class JSONTable {
         this.footer = footer;
         this.themeOptions = themeOptions;
         this.toolbarOptions = toolbarOptions;
-        this.buildTable();
+        this.buildTable(className);
         this.toolbar = this.buildToolbar(toolbarOptions);
         this.container = this.buildContainer(themeOptions);
         var context: JSONTable = this;
@@ -395,7 +400,7 @@ class JSONTable {
         document.dispatchEvent(new Event('jqxlready'));
         return container;
     }
-    private buildTable(): void {
+    private buildTable(className?: string): void {
         var context = this;
         var table: HTMLDivElement = document.createElement('div');
         if (context.headers) {
@@ -404,9 +409,13 @@ class JSONTable {
                 row.appendChild(context.createRowHeaderCell(''));
             }
             for (var i = 0; i < context.headers.length; i++) {
-                var cell: HTMLDivElement = document.createElement('div');
+                var cell: HTMLDivElement = document.createElement('div'),
+                    header: JSONHeader = context.headers[i];
                 cell.classList.add('jql-tbl-hdr-cll');
                 cell.classList.add('jql-btn');
+                if (header.className) {
+                    cell.className += ' ' + header.className;                   
+                }
                 cell.textContent = context.headers[i].text;
                 row.appendChild(cell);
             }
@@ -414,15 +423,20 @@ class JSONTable {
         }
         if (context.data) {
             table.classList.add('jql-tbl');
+            if (className) {
+                table.className += ' ' + className;
+            }
             var miniTlbrTbl = document.createElement('div');
             miniTlbrTbl.classList.add('jql-mn-tlbr-tbl');
             for (var y = 0, length = context.data.length; y < length; y++) {
-                var row: HTMLDivElement = context.createRow(false, false, y + 1);
+                var rowData: JSONRow = context.data[y];
+                var row: HTMLDivElement = context.createRow(false, false, y + 1, rowData.className);
                 if (context.toolbarOptions.includeRowNumbers) {
                     row.appendChild(context.createRowHeaderCell((y + 1).toString()));
                 }
-                for (var x = 0, xLength = context.data[y].data.length; x < xLength; x++) {
-                    row.appendChild(context.createCell(context.data[y].data[x], x, context.headers[x].type));
+                for (var x = 0, xLength = rowData.data.length; x < xLength; x++) {
+                    var cellData: JSONData = rowData.data[x];
+                    row.appendChild(context.createCell(cellData, x, context.headers[x].type));
                 }
                 table.appendChild(row);
                 miniTlbrTbl.appendChild(context.createMiniToolbar(y + 1));
@@ -517,7 +531,7 @@ class JSONTable {
         toolbar.appendChild(ul);
         return toolbar;
     }
-    public createRow(isHeader: boolean, isFooter: boolean, index: number): HTMLDivElement {
+    public createRow(isHeader: boolean, isFooter: boolean, index: number, className?: string): HTMLDivElement {
         var row = document.createElement('div');
         row.dataset['rowIndex'] = index.toString();
         if (isHeader) {
@@ -526,6 +540,9 @@ class JSONTable {
             row.classList.add('jql-tbl-ftr-rw');
         } else {
             row.classList.add('jql-tbl-rw');
+        }
+        if (className) {
+            row.className += ' ' + className;
         }
         return row;
     }
@@ -554,6 +571,9 @@ class JSONTable {
             cell.setAttribute('contenteditable', 'true');
         }
         cell.classList.add('jql-tbl-cll');
+        if (cellData.className) {
+            cell.className += ' ' + cellData.className;
+        }
         cell.tabIndex = index;
         cell.dataset['index'] = index.toString();
         cell.dataset['name'] = cellData.name;
@@ -803,7 +823,8 @@ class SelectedCell {
         onCopy: function () { },
         onjQXelready: function (table) { },
         toolbarOptions: new ToolbarOptions(true, true, true, true, 'left'),
-        themeOptions: new ThemeOptions('blu', 'normal')
+        themeOptions: new ThemeOptions('blu', 'normal'),
+        className: null
     };
     $.fn.jQXel = function (options) {
         defaults = $.extend(defaults, options);
@@ -819,7 +840,8 @@ class SelectedCell {
                 defaults.onCopy,
                 defaults.onjQXelready,
                 defaults.toolbarOptions,
-                defaults.themeOptions
+                defaults.themeOptions,
+                defaults.className
             );
         });
     };
