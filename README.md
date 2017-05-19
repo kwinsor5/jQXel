@@ -114,6 +114,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 ### JSONTable
 * headers (Array<JSONHeader>) - The header cells passed on initialization
 * footer (Array<JSONData>) - The footer cells passed on initialization
+* className (string) - The collection of class names to apply to the table container (space delimited)
 * selectedCell (SelectedCell) - The cell object designated when a cell is active
 * highlightedRows (Array<JSONRow>) - An array of JSONRow objects for the highlighted rows
 * getClipboardText() {string} - Returns an array of JSONRow objects for the currently highlighted rows
@@ -146,11 +147,13 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * type (string) - The type of input for this column - text, select
 * name (string) - This is currently not being used
 * options (Array<HTMLOptionElement>) - Available options for cells of type 'select' in this column
+* className (string) - The collection of class names to apply to the column header (space delimited)
 
 ### JSONRow
 * entityId (number) - The row identifier
 * idName (string) - The property name of the identifier. Used for serialization
 * data (Array<JSONData>) - The row data
+* className (string) - The collection of class names to apply to the table row (space delimited)
 
 ### JSONData
 * text (string) - The display text of the cell
@@ -159,6 +162,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * entityId (number) - The identifier/primary key for the object
 * name (string) - The name of the editable field. Used for serialization of JSON objects in change events
 * html (string?) - If present, the HTML provided will be inserted into the cell
+* className (string) - The collection of class names to apply to the cell (space delimited)
 
 ### SelectedCell
 * cell (HTMLDivElement) - The active cell element
