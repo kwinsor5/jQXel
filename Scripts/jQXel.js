@@ -104,6 +104,7 @@ class JSONTable {
         }
         var container = document.getElementById(containerID);
         container.appendChild(this.container);
+        context.container.dispatchEvent(new Event('jqxlready'));
     }
     setItemValue(rowIndex, cellIndex, text) {
         this.data[rowIndex].data[cellIndex].text = text;

@@ -155,6 +155,7 @@ class JSONTable {
         }
         var container: HTMLElement = document.getElementById(containerID);
         container.appendChild(this.container);
+        context.container.dispatchEvent(new Event('jqxlready'));
     }
 
     private setItemValue(rowIndex: number, cellIndex: number, text: string): void {
