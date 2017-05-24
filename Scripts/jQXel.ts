@@ -149,13 +149,13 @@ class JSONTable {
         }
         if (onjQXelReady.length) {
             readyCallbacks.add(onjQXelReady);
-            context.container.addEventListener('jqxlready', function (e: Event) {
+            context.container.addEventListener('jqxelready', function (e: Event) {
                 readyCallbacks.fire(e, context);
             });
         }
         var container: HTMLElement = document.getElementById(containerID);
         container.appendChild(this.container);
-        context.container.dispatchEvent(new Event('jqxlready'));
+        context.container.dispatchEvent(new Event('jqxelready'));
     }
 
     private setItemValue(rowIndex: number, cellIndex: number, text: string): void {
@@ -398,7 +398,7 @@ class JSONTable {
         else {
             container.appendChild(this.table);
         }
-        document.dispatchEvent(new Event('jqxlready'));
+        document.dispatchEvent(new Event('jqxelready'));
         return container;
     }
     private buildTable(className?: string): void {
@@ -797,7 +797,7 @@ class SelectedCell {
                 var val = $(this).text();
                 context.cell.textContent = val;
                 context.cell.dataset['value'] = $(this)[0].dataset['value'];
-                context.enableScroll();
+                $(context.cell).blur();
             });
             $(context.cell).on('blur', function (e: Event) {
                 $(context.cell).find('ul').remove();
@@ -819,7 +819,7 @@ class SelectedCell {
         beforeColumnChange: function () { },
         beforeCellChange: function () { },
         onCopy: function () { },
-        onjQXelready: function (table) { },
+        onjQXelReady: function (table) { },
         toolbarOptions: new ToolbarOptions(true, true, true, true, 'left'),
         themeOptions: new ThemeOptions('blu', 'normal'),
         className: null
@@ -836,7 +836,7 @@ class SelectedCell {
                 defaults.beforeColumnChange,
                 defaults.beforeRowChange,
                 defaults.onCopy,
-                defaults.onjQXelready,
+                defaults.onjQXelReady,
                 defaults.toolbarOptions,
                 defaults.themeOptions,
                 defaults.className

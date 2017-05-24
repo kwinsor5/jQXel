@@ -98,13 +98,13 @@ class JSONTable {
         }
         if (onjQXelReady.length) {
             readyCallbacks.add(onjQXelReady);
-            context.container.addEventListener('jqxlready', function (e) {
+            context.container.addEventListener('jqxelready', function (e) {
                 readyCallbacks.fire(e, context);
             });
         }
         var container = document.getElementById(containerID);
         container.appendChild(this.container);
-        context.container.dispatchEvent(new Event('jqxlready'));
+        context.container.dispatchEvent(new Event('jqxelready'));
     }
     setItemValue(rowIndex, cellIndex, text) {
         this.data[rowIndex].data[cellIndex].text = text;
@@ -358,7 +358,7 @@ class JSONTable {
         else {
             container.appendChild(this.table);
         }
-        document.dispatchEvent(new Event('jqxlready'));
+        document.dispatchEvent(new Event('jqxelready'));
         return container;
     }
     buildTable(className) {
@@ -739,7 +739,7 @@ class SelectedCell {
                 var val = $(this).text();
                 context.cell.textContent = val;
                 context.cell.dataset['value'] = $(this)[0].dataset['value'];
-                context.enableScroll();
+                $(context.cell).blur();
             });
             $(context.cell).on('blur', function (e) {
                 $(context.cell).find('ul').remove();
@@ -759,7 +759,7 @@ class SelectedCell {
         beforeColumnChange: function () { },
         beforeCellChange: function () { },
         onCopy: function () { },
-        onjQXelready: function (table) { },
+        onjQXelReady: function (table) { },
         toolbarOptions: new ToolbarOptions(true, true, true, true, 'left'),
         themeOptions: new ThemeOptions('blu', 'normal'),
         className: null
@@ -767,7 +767,7 @@ class SelectedCell {
     $.fn.jQXel = function (options) {
         defaults = $.extend(defaults, options);
         return this.each(function (index, item) {
-            return new JSONTable(defaults.data, defaults.headers, defaults.footer, item.id, defaults.beforeCellChange, defaults.beforeColumnChange, defaults.beforeRowChange, defaults.onCopy, defaults.onjQXelready, defaults.toolbarOptions, defaults.themeOptions, defaults.className);
+            return new JSONTable(defaults.data, defaults.headers, defaults.footer, item.id, defaults.beforeCellChange, defaults.beforeColumnChange, defaults.beforeRowChange, defaults.onCopy, defaults.onjQXelReady, defaults.toolbarOptions, defaults.themeOptions, defaults.className);
         });
     };
 })(jQuery, window, document);
