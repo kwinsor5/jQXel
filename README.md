@@ -55,7 +55,11 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
         );
         data.push({
             data: [
-                { text: '0,2', value: '0,2', editable: 'false', entityId: 2, name: 'Text' },
+                //NOTE: The HTML property takes an HTMLElement object. Two of the proper methods of passing in an HTMLElement:
+                // 1. Create a jQuery object and cast to an HTML object - $('<div/>').text('Hi!')[0] or $('<div/>').text('Hi!').get(0)
+                // 2. Create an HTML object via raw JavaScript - var div = document.createElement('div'); div.innerText = 'Hi!';
+                
+                { text: '0,2', value: '0,2', editable: 'false', entityId: 2, name: 'Text', html: $('<div/>').text('Hi!')[0] },
                 { text: '1,2', value: '1,2', editable: 'true', entityId: 2, name: 'Text1' },
                 { text: '2,2', value: '2,2', editable: 'true', entityId: 2, name: 'Text2' },
                 { text: '3,2', value: '3,2', editable: 'true', entityId: 2, name: 'Text3' },
