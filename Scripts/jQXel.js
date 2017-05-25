@@ -249,11 +249,9 @@ class JSONTable {
     }
     insertRowAfter(rowIndex) {
         var rows = this.table.getElementsByClassName('jql-tbl-rw');
-        console.log(rowIndex);
         var newRow = this.createRow(false, false, rowIndex + 1), dataRow = this.createNewDataRow(), context = this;
         newRow = context.populateNewRow(newRow, dataRow.data);
         context.data.splice(rowIndex, 0, dataRow).join();
-        console.log(context.data);
         newRow.style.display = 'none';
         $(newRow).insertAfter(rows[rowIndex]);
         this.refreshRowHeaders();
@@ -475,7 +473,6 @@ class JSONTable {
             copyBtn.id = 'jqlCopyBtn';
             copyBtn.textContent = 'Copy';
             copyBtn.onclick = function (e) {
-                console.log('click');
                 context.copyToClipboard();
             };
             li.appendChild(copyBtn);
@@ -668,6 +665,28 @@ class SelectedCell {
         this.parentJSON = parentRow;
         this.select(type, options);
     }
+    get html() {
+        return $(this.cell.innerHTML)[0];
+    }
+    set html(value) {
+        this.cell.innerHTML = '';
+        this.cell.appendChild(value);
+    }
+    get name() {
+        return this.cell.dataset['name'];
+    }
+    get text() {
+        return this.cell.innerText;
+    }
+    set text(value) {
+        this.cell.innerText = value;
+    }
+    get val() {
+        return this.cell.dataset['value'];
+    }
+    set val(value) {
+        this.cell.dataset['value'] = value;
+    }
     alert(message) {
         this.cell.parentElement.classList.add('jql-alert');
         if (message && message.length) {
@@ -694,7 +713,6 @@ class SelectedCell {
     }
     getRowObject() {
         var context = this, rowObject = new Object();
-        console.log(context.parentJSON);
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row = context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {
@@ -745,6 +763,9 @@ class SelectedCell {
                 $(context.cell).find('ul').remove();
                 context.enableScroll();
             });
+        }
+        else if (type === 'text') {
+            context.cell.innerText = context.cell.dataset['value'];
         }
     }
     unselect() {

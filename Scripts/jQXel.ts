@@ -288,13 +288,11 @@ class JSONTable {
     }
     private insertRowAfter(rowIndex: number): void {
         var rows: NodeListOf<HTMLDivElement> = <NodeListOf<HTMLDivElement>>this.table.getElementsByClassName('jql-tbl-rw');
-        console.log(rowIndex);
         var newRow = this.createRow(false, false, rowIndex + 1),
             dataRow = this.createNewDataRow(),
             context = this;
         newRow = context.populateNewRow(newRow, dataRow.data);
         context.data.splice(rowIndex, 0, dataRow).join();
-        console.log(context.data);
         newRow.style.display = 'none';
         $(newRow).insertAfter(rows[rowIndex]);
         this.refreshRowHeaders();
@@ -523,7 +521,6 @@ class JSONTable {
             copyBtn.id = 'jqlCopyBtn';
             copyBtn.textContent = 'Copy';
             copyBtn.onclick = function (e: MouseEvent) {
-                console.log('click');
                 context.copyToClipboard();
             };
             li.appendChild(copyBtn);
@@ -721,6 +718,28 @@ class SelectedCell {
         this.select(type, options);
     }
     public cell: HTMLDivElement;
+    public get html(): HTMLElement {
+        return $(this.cell.innerHTML)[0];
+    }
+    public set html(value: HTMLElement) {
+        this.cell.innerHTML = '';
+        this.cell.appendChild(value);
+    }
+    public get name(): string {
+        return this.cell.dataset['name'];
+    }
+    public get text(): string {
+        return this.cell.innerText;
+    }
+    public set text(value: string) {
+        this.cell.innerText = value;
+    }
+    public get val(): string {
+        return this.cell.dataset['value'];
+    }
+    public set val(value: string) {
+        this.cell.dataset['value'] = value;
+    }
     public parentJSON: JSONRow;
     public alert(message: string): void {
         this.cell.parentElement.classList.add('jql-alert');
@@ -751,7 +770,6 @@ class SelectedCell {
     public getRowObject(): Object {
         var context: SelectedCell = this,
             rowObject: Object = new Object();
-        console.log(context.parentJSON);
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row: HTMLDivElement = <HTMLDivElement>context.cell.parentElement;
         for (var i = 1; i < row.children.length; i++) {
@@ -803,6 +821,8 @@ class SelectedCell {
                 $(context.cell).find('ul').remove();
                 context.enableScroll();
             });
+        } else if (type === 'text') {
+            context.cell.innerText = context.cell.dataset['value'];
         }
     }
     public unselect() {
