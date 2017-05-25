@@ -166,6 +166,9 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 
 ### SelectedCell
 * cell (HTMLDivElement) - The active cell element
+* html (HTMLElement) - The HTML content displayed in the cell
+* text (string) - The text to be displayed in the cell
+* val (string) - The editable value of the cell. When focused, the display value (text/HTML) will be replaced with the editable value.
 * alert(message: string) {void} - Adds the jql-alert class to the parent row element. If the message parameter is present, set the parent row's title attribute
 * removeAlert() {void} - Removes the jql-alert class and parent row's title attribute
 * getRowIndex() {number} - Returns the index of the parent row
