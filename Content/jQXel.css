@@ -181,6 +181,7 @@ ul.jql-slct-lst {
     list-style-type: none;
     max-height: 300px;
     overflow-y: auto;
+    z-index: 100;
 }
 
     ul.jql-slct-lst > li {
