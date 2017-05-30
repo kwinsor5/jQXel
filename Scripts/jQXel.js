@@ -661,9 +661,10 @@ class JSONTable {
 }
 class SelectedCell {
     constructor(cell, type, parentRow, options) {
+        this._type = type;
         this.cell = cell;
         this.parentJSON = parentRow;
-        this.select(type, options);
+        this.select(options);
     }
     get html() {
         return $(this.cell.innerHTML)[0];
@@ -681,6 +682,9 @@ class SelectedCell {
     }
     set text(value) {
         this.cell.innerText = value;
+    }
+    get type() {
+        return this._type;
     }
     get val() {
         return this.cell.dataset['value'];
@@ -744,10 +748,10 @@ class SelectedCell {
     enableScroll() {
         $('body').unbind('mousewheel');
     }
-    select(type, options) {
+    select(options) {
         var context = this;
         context.cell.classList.add('jql-slctd');
-        if (type === 'select' && options.length) {
+        if (context.type === 'select' && options.length) {
             context.disableScroll();
             var select = document.createElement('ul');
             select.classList.add('jql-slct-lst');
@@ -769,7 +773,7 @@ class SelectedCell {
                 context.enableScroll();
             });
         }
-        else if (type === 'text') {
+        else if (context.type === 'text') {
             context.cell.innerText = context.cell.dataset['value'];
         }
     }

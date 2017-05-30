@@ -713,11 +713,13 @@ class JSONTable {
 
 class SelectedCell {
     constructor(cell: HTMLDivElement, type: string, parentRow: JSONRow, options: Array<HTMLOptionElement>) {
+        this._type = type;
         this.cell = cell;
         this.parentJSON = parentRow;
-        this.select(type, options);
+        this.select(options);
     }
     public cell: HTMLDivElement;
+    private _type: string;
     public get html(): HTMLElement {
         return $(this.cell.innerHTML)[0];
     }
@@ -734,6 +736,9 @@ class SelectedCell {
     }
     public set text(value: string) {
         this.cell.innerText = value;
+    }
+    public get type(): string {
+        return this._type;
     }
     public get val(): string {
         return this.cell.dataset['value'];
@@ -800,10 +805,10 @@ class SelectedCell {
     private enableScroll(): void {
         $('body').unbind('mousewheel');
     }
-    public select(type: string, options: Array<HTMLOptionElement>): void {
+    public select(options: Array<HTMLOptionElement>): void {
         var context = this;
         context.cell.classList.add('jql-slctd');
-        if (type === 'select' && options.length) {
+        if (context.type === 'select' && options.length) {
             context.disableScroll();
             var select: HTMLUListElement = document.createElement('ul');
             select.classList.add('jql-slct-lst');
@@ -826,7 +831,7 @@ class SelectedCell {
                 $(context.cell).find('ul').remove();
                 context.enableScroll();
             });
-        } else if (type === 'text') {
+        } else if (context.type === 'text') {
             context.cell.innerText = context.cell.dataset['value'];
         }
     }
