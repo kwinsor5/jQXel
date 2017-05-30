@@ -11,7 +11,7 @@ TypeScript/jQuery plugin to convert an array of JSON objects into an Excel-like 
 * Automatic row serialization
 * Toolbar options to add, copy, and delete rows
 * Copy multiple rows to your clipboard
-* Select list, text, link support
+* Select list, text, HTML support
 
 ## EXAMPLES
 ### Create your columns
