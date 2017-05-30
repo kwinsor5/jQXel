@@ -606,7 +606,7 @@ class JSONTable {
         var context = this;
         context.bindNavigation(cell);
         var header: JSONHeader = context.headers[parseInt(cell.dataset['index'])];
-        var rowIndex: number = parseInt(cell.parentElement.dataset['rowIndex']);
+        var rowIndex: number = Math.max(0, parseInt(cell.parentElement.dataset['rowIndex']) - 1);
         context.container.dispatchEvent(new Event('beforecellchange'));
         context.selectedCell = new SelectedCell(cell, header.type, context.data[rowIndex], header.options);
     }
