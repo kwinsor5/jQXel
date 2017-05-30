@@ -750,6 +750,7 @@ class SelectedCell {
     }
     select(options) {
         var context = this;
+        console.log('select');
         context.cell.classList.add('jql-slctd');
         if (context.type === 'select' && options.length) {
             context.disableScroll();
@@ -762,10 +763,11 @@ class SelectedCell {
                 select.appendChild(li);
             }
             context.cell.appendChild(select);
-            $(select).on('click', 'li', function (e) {
-                var val = $(this).text();
-                context.cell.textContent = val;
-                context.cell.dataset['value'] = $(this)[0].dataset['value'];
+            //'click' event wasn't firing in Firefox for some reason...
+            $(select).on('mousedown', 'li', function (e) {
+                var listItem = $(this)[0];
+                context.text = listItem.textContent;
+                context.val = listItem.dataset['value'];
                 $(context.cell).blur();
             });
             $(context.cell).on('blur', function (e) {
