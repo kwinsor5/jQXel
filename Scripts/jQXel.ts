@@ -722,8 +722,9 @@ class SelectedCell {
         return $(this.cell.innerHTML)[0];
     }
     public set html(value: HTMLElement) {
-        this.cell.innerHTML = '';
-        this.cell.appendChild(value);
+        var context: SelectedCell = this;
+        context.cell.innerHTML = '';
+        context.cell.appendChild(value);
     }
     public get name(): string {
         return this.cell.dataset['name'];
@@ -742,14 +743,16 @@ class SelectedCell {
     }
     public parentJSON: JSONRow;
     public alert(message: string): void {
-        this.cell.parentElement.classList.add('jql-alert');
+        var context: SelectedCell = this;
+        context.cell.parentElement.classList.add('jql-alert');
         if (message && message.length) {
-            this.cell.parentElement.title = message;
+            context.cell.parentElement.title = message;
         }
     }
     public removeAlert(): void {
-        this.cell.parentElement.classList.remove('jql-alert');
-        this.cell.parentElement.removeAttribute('title');
+        var context: SelectedCell = this;
+        context.cell.parentElement.classList.remove('jql-alert');
+        context.cell.parentElement.removeAttribute('title');
     }
     public getRowIndex(): number {
         var context: SelectedCell = this,
@@ -762,7 +765,7 @@ class SelectedCell {
         var context: SelectedCell = this,
             rowValues: Array<string> = new Array<string>();
         var row: HTMLDivElement = <HTMLDivElement>context.cell.parentElement;
-        for (var i = includeRowHeader ? 1 : 0; i < row.children.length; i++) { // skip the jQXcel-added cell
+        for (var i = includeRowHeader ? 1 : 0; i < row.children.length; i++) { // skip the jQXel-added cell
             rowValues.push((<HTMLDivElement>row.children[i]).dataset['value']);
         }
         return rowValues;
@@ -772,9 +775,11 @@ class SelectedCell {
             rowObject: Object = new Object();
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row: HTMLDivElement = <HTMLDivElement>context.cell.parentElement;
-        for (var i = 1; i < row.children.length; i++) {
+        for (var i = 0; i < row.children.length; i++) { // skip the jQXel-added cell
             var child = (<HTMLDivElement>row.children[i]);
-            rowObject[child.dataset['name']] = child.dataset['value'];
+            if (!child.classList.contains('jql-tbl-rw-hdr-cll')) {
+                rowObject[child.dataset['name']] = child.dataset['value'];
+            }
         }
         return rowObject;
     }

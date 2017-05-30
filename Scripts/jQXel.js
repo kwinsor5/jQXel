@@ -669,8 +669,9 @@ class SelectedCell {
         return $(this.cell.innerHTML)[0];
     }
     set html(value) {
-        this.cell.innerHTML = '';
-        this.cell.appendChild(value);
+        var context = this;
+        context.cell.innerHTML = '';
+        context.cell.appendChild(value);
     }
     get name() {
         return this.cell.dataset['name'];
@@ -688,14 +689,16 @@ class SelectedCell {
         this.cell.dataset['value'] = value;
     }
     alert(message) {
-        this.cell.parentElement.classList.add('jql-alert');
+        var context = this;
+        context.cell.parentElement.classList.add('jql-alert');
         if (message && message.length) {
-            this.cell.parentElement.title = message;
+            context.cell.parentElement.title = message;
         }
     }
     removeAlert() {
-        this.cell.parentElement.classList.remove('jql-alert');
-        this.cell.parentElement.removeAttribute('title');
+        var context = this;
+        context.cell.parentElement.classList.remove('jql-alert');
+        context.cell.parentElement.removeAttribute('title');
     }
     getRowIndex() {
         var context = this, index = 0;
@@ -715,9 +718,11 @@ class SelectedCell {
         var context = this, rowObject = new Object();
         rowObject[context.parentJSON.idName] = context.parentJSON.entityId;
         var row = context.cell.parentElement;
-        for (var i = 1; i < row.children.length; i++) {
+        for (var i = 0; i < row.children.length; i++) {
             var child = row.children[i];
-            rowObject[child.dataset['name']] = child.dataset['value'];
+            if (!child.classList.contains('jql-tbl-rw-hdr-cll')) {
+                rowObject[child.dataset['name']] = child.dataset['value'];
+            }
         }
         return rowObject;
     }
